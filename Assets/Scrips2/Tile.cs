@@ -74,9 +74,9 @@ public class Tile
     /// <summary>
     /// Makes the tile in de queue.
     /// </summary>
-    public void InQueueNum()
+    public void InQueueNum(bool t_bool)
     {
-        InQueue = true;
+        InQueue = t_bool;
     }
     public void AddX(int num)
     {

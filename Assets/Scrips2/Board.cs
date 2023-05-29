@@ -151,16 +151,21 @@ public class Board
         }
         
     }
+    public bool SeeIfQueue(int x, int y)
+    {
+        return tile[x, y].InQueue;
+    }
     public void AddQueue(int x, int y)
     {
-        if (tile[x,y].BombsNear == 0 /*&& !tile[x, y].InQueue*/)
+        if (tile[x,y].BombsNear == 0 && !tile[x,y].BomboN)
         {
             ChecksurroundindQueue( x,  y);
         }
-        else
+        else if (tile[x, y].BombsNear != 0 /*&& !tile[x, y].InQueue*/)
         {
-            tile[x, y].BombsNear.ToString();
+            Debug.Log("ji");
         }
+        
     }
     // <summary>
     // Checks the surrounding tiles of a given position and adds them to the queue if they are not bomb tiles.
@@ -168,22 +173,32 @@ public class Board
     public void ChecksurroundindQueue(int i, int j)
     {
       
-        for (int x = i - 1; x < i + 1; x++)
+        for (int x = i - 1; x <= i + 1; x++)
         {
-            for (int y = j - 1; y < j + 1; y++)
+            for (int y = j - 1; y <= j + 1; y++)
             {
                 if (x < 0) continue;
                 if (y < 0) continue;
                 if (x >= boardColumns) continue;
                 if (y >= boardRows) continue;
-                // if (tile[x, y].BombsNear == 0) continue;
+               // if (tile[x, y].BombsNear != 0) continue;
                 if (tile[x, y].BomboN) continue;
                 if (tile[x, y].InQueue) continue;
                 QueueBombs.Enqueue(tile[x, y]);
-                tile[x, y].InQueueNum();
+                tile[x, y].InQueueNum(true);
 
 
             }
+        }
+        AddBoolQueue();
+    }
+    public void AddBoolQueue()
+    {
+        while (QueueBombs.Count > 0)
+        {
+
+            Tile temp = QueueBombs.Dequeue();
+            AddQueue(temp.X, temp.Y);
         }
     }
 

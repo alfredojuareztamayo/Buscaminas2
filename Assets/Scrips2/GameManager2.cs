@@ -22,4 +22,12 @@ public class GameManager2 : MonoBehaviour
     {
         return Tablero.NumbersOfBombsNear(x, y);
     }
+    public bool FinallyQueue(int x, int y)
+    {
+        return Tablero.SeeIfQueue(x, y);
+    }
+    public void QueueFinal(int x, int y)
+    {
+        Tablero.AddQueue(x, y);
+    }
 }
