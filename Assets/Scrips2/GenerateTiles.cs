@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class GenerateTiles : MonoBehaviour
 {
-    //int Size;
+    int Size;
     private GameObject main3;
     private MenuManager menuManager;
     int numTiles;
@@ -14,6 +14,7 @@ public class GenerateTiles : MonoBehaviour
     {
         main3 = GameObject.Find("MenuManager");
         menuManager = main3.GetComponent<MenuManager>();
+        Size = menuManager.Size2;
         numTiles = menuManager.Size2 * menuManager.Size2;
         GenerateButtoms();
     }
@@ -28,7 +29,7 @@ public class GenerateTiles : MonoBehaviour
             {
                 buttomManager2 = Temp.AddComponent<ButtomManager2>();
             }
-            buttomManager2.SetCoords(i);
+            buttomManager2.SetCoords(i, Size);
         }
     }
  

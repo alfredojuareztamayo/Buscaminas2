@@ -39,7 +39,7 @@ public class Tile
     /// <summary>
     /// Initializes a new instance of the Tile class.
     /// </summary>
-
+    public int CheckInt { get; private set; }
     public int X { get; private set; }
     public int Y { get; private set; }
     public Tile()
@@ -85,6 +85,10 @@ public class Tile
     public void Addy(int num)
     {
         Y = num;
+    }
+    public void AdCheck(int num)
+    {
+        CheckInt = num;
     }
 }
 

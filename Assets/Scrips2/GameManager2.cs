@@ -15,6 +15,7 @@ public class GameManager2 : MonoBehaviour
     private GameObject main2;
     private MenuManager menuManager;
     public GameObject Panel;
+    public int TotalOfTiles;
     
     // Start is called before the first frame update
     void Start()
@@ -22,11 +23,11 @@ public class GameManager2 : MonoBehaviour
         main2 = GameObject.Find("MenuManager");
         menuManager = main2.GetComponent<MenuManager>();
         Level = menuManager.T_Level;
-        
         Size = menuManager.Size2;
         GridLayoutGroup g = Panel.GetComponent<GridLayoutGroup>();
         g.constraintCount = Size;
         Tablero.ChechLevel(Level);
+        TotalOfTiles = (Size * Size) - Tablero.BombNum;
         //Tablero.PrintArray();
     }
 
@@ -35,21 +36,29 @@ public class GameManager2 : MonoBehaviour
     {
         GetTheNumber();
     }
-    public string SetStringBoard(int x, int y)
+    public string SetStringBoard(int x, int y, int num)
     {
-        return Tablero.NumbersOfBombsNear(x, y);
+        return Tablero.NumbersOfBombsNear(x, y, num);
     }
-    public bool FinallyQueue(int x, int y)
+    public bool FinallyQueue(int x, int y, int num)
     {
-        return Tablero.SeeIfQueue(x, y);
+        return Tablero.SeeIfQueue(x, y,num);
     }
-    public void QueueFinal(int x, int y)
+    public void QueueFinal(int x, int y, int num)
     {
-        Tablero.AddQueue(x, y,Size,Size);
+        Tablero.AddQueue(x, y,Size,Size, num);
     }
     public void GetTheNumber()
     {
-        bombsLeft.text = "Ilan Oro Manco";//+ Tablero.GetNumberBombs().ToString();
+        bombsLeft.text = "Te faltan por descubrir: " + (TotalOfTiles-TilesLefts(Level)) + " islas";
         
+    }
+    public bool GanasteONo(int x, int y, int num)
+    {
+        return Tablero.WinLose(x, y, num);
+    }
+    public int TilesLefts(int num)
+    {
+        return Tablero.SeeWitchTileAreVisible(num);
     }
 }

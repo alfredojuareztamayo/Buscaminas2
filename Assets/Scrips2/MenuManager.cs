@@ -55,4 +55,14 @@ public class MenuManager : MonoBehaviour
         SceneManager.LoadScene("MainBuscaMinas");
         Size2 = Board.boardRowsHard;
     }
+    public void Perdiste()
+    {
+        SceneManager.LoadScene("Lose");
+        //Destroy(this);
+    }
+    public void Ganaste()
+    {
+        SceneManager.LoadScene("Win");
+        //Destroy(this);
+    }
 }
