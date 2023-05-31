@@ -4,11 +4,17 @@ using UnityEngine;
 
 public class GenerateTiles : MonoBehaviour
 {
-    int numTiles = Board.boardColumns * Board.boardRows;
+    //int Size;
+    private GameObject main3;
+    private MenuManager menuManager;
+    int numTiles;
     public GameObject Buttom;
     public Transform Parent;
     void Start()
     {
+        main3 = GameObject.Find("MenuManager");
+        menuManager = main3.GetComponent<MenuManager>();
+        numTiles = menuManager.Size2 * menuManager.Size2;
         GenerateButtoms();
     }
     

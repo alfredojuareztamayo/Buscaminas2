@@ -8,94 +8,122 @@ public class Board
 {
     Stack<Tile> Bombitas = new();
     Queue<Tile> QueueBombs = new Queue<Tile>();
+    public const int boardRowsMedium = 12;
+    public const int boardColumnsMedium = 12;
+    public const int boardRowsHard = 13;
+    public const int boardColumnsHard = 13;
     public const int boardRows = 10;
     public const int boardColumns = 10;
     public Tile[,] tile = new Tile[boardRows, boardColumns];
-    public int BombNum { get; private set; } = 10;
+    public Tile[,] tile2 = new Tile[boardRowsMedium, boardColumnsMedium];
+    public Tile[,] tile3 = new Tile[boardRowsHard, boardColumnsHard];
+    int CheckTile;
+    public int BombNum { get; private set; } = 8;
    // public GameObject[] TilesAndBoard; 
 
+
+    public void ChechLevel(int lvl)
+    {
+        switch (lvl)
+        {
+            case 0:
+                GenerateBoard(tile, boardRows, boardColumns);
+                CheckTile = 0;
+                AddToStack(tile, boardRows, boardColumns);
+                break; 
+            case 1:
+                GenerateBoard(tile2, boardRowsMedium, boardColumnsMedium);
+                CheckTile = 1;
+                AddToStack(tile2, boardRowsMedium, boardColumnsMedium);
+                break;
+            case 2:
+                GenerateBoard(tile3, boardRowsHard, boardColumnsHard);
+                CheckTile = 2;
+                AddToStack(tile3, boardRowsHard, boardColumnsHard);
+                break;
+        }
+    }
     /// <summary>
     /// Generates the game board by randomly placing bombs and non-bomb tiles.
     /// </summary>
-    public void GenerateBoard()
+    public void GenerateBoard(Tile[,] temp, int tempRow, int TempColum)
     {
+       // Tile tmp = 
         int tempBomb = BombNum;
-        int tilesLeft = boardColumns * boardRows;
+        int tilesLeft = tempRow * TempColum;
        
 
-        for (int i = 0; i < boardRows; i++)
+        for (int i = 0; i < tempRow; i++)
         {
             
-            for (int j = 0; j < boardColumns; j++)
+            for (int j = 0; j < TempColum; j++)
             {
 ;
                 int random = Random.Range(0, 5);
                 if (tilesLeft == tempBomb)
                 {
-                    tile[i, j] = new Tile(true);
+                    temp[i, j] = new Tile(true);
                     tempBomb--;
                 }
                 else
                 {
                     if (tempBomb > 0 & random == 1)
                     {
-                        tile[i, j] = new Tile(true);
+                        temp[i, j] = new Tile(true);
                         tempBomb--;
                     }
                     else
                     {
-                        tile[i, j] = new Tile(false);
+                        temp[i, j] = new Tile(false);
                     }
                 }
-                tile[i, j].AddX(j);
-                tile[i, j].Addy(i);
+                temp[i, j].AddX(i);
+                temp[i, j].Addy(j);
                 tilesLeft--;
              
             }
 
         
         }
-
-        AddToStack();
         
     }
 
     /// <summary>
     /// Prints the game board to the console.
     /// </summary>
-    public void PrintArray()
-    {
-        string printArray = " ";
-        for (int i = 0; i < boardRows; i++)
-        {
-            for (int j = 0; j < boardColumns; j++)
-            {
-                if (tile[i, j].BomboN)
-                {
-                    printArray += 'B';
-                }
-                else
-                {
-                    printArray += tile[i, j].BombsNear;
-                }
-                printArray += ',';
-            }
-            printArray += '\n';
-        }
-        Debug.Log(printArray);
-    }
+    //public void PrintArray()
+    //{
+    //    string printArray = " ";
+    //    for (int i = 0; i < boardRows; i++)
+    //    {
+    //        for (int j = 0; j < boardColumns; j++)
+    //        {
+    //            if (tile[i, j].BomboN)
+    //            {
+    //                printArray += 'B';
+    //            }
+    //            else
+    //            {
+    //                printArray += tile[i, j].BombsNear;
+    //            }
+    //            printArray += ',';
+    //        }
+    //        printArray += '\n';
+    //    }
+    //    Debug.Log(printArray);
+    //}
 
     /// <summary>
     /// Adds bomb tiles to the stack and checks their surrounding tiles.
     /// </summary>
-    public void AddToStack()
+    public void AddToStack(Tile[,] temp, int TempRow, int TempColu)
     {
-        for (int i = 0; i < boardRows; i++)
+        for (int i = 0; i < TempRow; i++)
         {
-            for (int j = 0; j < boardColumns; j++)
+            for (int j = 0; j < TempColu; j++)
             {
-                if (!tile[i, j].BomboN) continue;
-                Checksurroundind(i, j);
+                if (!temp[i, j].BomboN) continue;
+                Checksurroundind(temp,i, j, TempRow, TempColu);
 
             }
         }
@@ -104,7 +132,7 @@ public class Board
     /// <summary>
     /// Checks the surrounding tiles of a given position and adds them to the stack if they are not bomb tiles.
     /// </summary>
-    public void Checksurroundind(int i, int j)
+    public void Checksurroundind(Tile[,] temp, int i, int j, int TempRow, int TempColu)
     {
         for (int x = i - 1; x <= i + 1; x++)
         {
@@ -112,11 +140,11 @@ public class Board
             {
                 if (x < 0) continue;
                 if (y < 0) continue;
-                if (x >= boardColumns) continue;
-                if (y >= boardRows) continue;
-                if (tile[x, y].BomboN) continue;
-                Bombitas.Push(tile[x, y]);
-                tile[x, y].Visible();
+                if (x >= TempColu) continue;
+                if (y >= TempRow) continue;
+                if (temp[x, y].BomboN) continue;
+                Bombitas.Push(temp[x, y]);
+                temp[x, y].Visible();
             }
         }
         AddCounterBombs();
@@ -138,68 +166,107 @@ public class Board
     /// </summary>
     public string NumbersOfBombsNear(int x, int y)
     {
+        Tile[,] tempT = WitchTile();
         
-        if(tile[x, y].BomboN)
+        if(tempT[x, y].BomboN)
         {
-           // Debug.Log("Soy bomba");
+            // Debug.Log("Soy bomba");
+            //Debug.Log("X: " + tile[x, y].X + "Y :" + tile[x, y].Y);
             return "B";
         }
         else
         {
-          //  Debug.Log("Soy num");
-            return tile[x, y].BombsNear.ToString();
+            //  Debug.Log("Soy num");
+
+            //Debug.Log("X: " + tile[x, y].X + "Y :" + tile[x, y].Y);
+            return tempT[x, y].BombsNear.ToString();
+
         }
         
     }
+    public Tile[,] WitchTile()
+    {
+        switch (CheckTile)
+        {
+            case 0:
+                Tile[,] temp = tile;
+                return temp;
+                
+                case 1:
+                Tile[,] temp2 = tile2;
+                return temp2;
+               
+            case 2:
+                Tile[,] temp3 = tile3;
+                return temp3;
+        }
+        return null;
+    }
     public bool SeeIfQueue(int x, int y)
     {
-        return tile[x, y].InQueue;
+        Tile[,] tempT = WitchTile();
+        return tempT[x, y].InQueue;
     }
-    public void AddQueue(int x, int y)
+    public void AddQueue(int x, int y, int TempRow, int TempColu)
     {
-        if (tile[x,y].BombsNear == 0 && !tile[x,y].BomboN)
+        Tile[,] tempT = WitchTile();
+        if (tempT[x,y].BombsNear == 0 && !tempT[x,y].BomboN)
         {
-            ChecksurroundindQueue( x,  y);
+            ChecksurroundindQueue(x, y, TempRow, TempColu);
         }
-        else if (tile[x, y].BombsNear != 0 /*&& !tile[x, y].InQueue*/)
+        else if (tempT[x, y].BombsNear != 0 /*&& !tile[x, y].InQueue*/)
         {
             Debug.Log("ji");
+            
         }
         
     }
     // <summary>
     // Checks the surrounding tiles of a given position and adds them to the queue if they are not bomb tiles.
     // </summary>
-    public void ChecksurroundindQueue(int i, int j)
+    public void ChecksurroundindQueue(int i, int j, int TempRow, int TempColu)
     {
-      
+
+        Tile[,] tempT = WitchTile();
         for (int x = i - 1; x <= i + 1; x++)
         {
             for (int y = j - 1; y <= j + 1; y++)
             {
                 if (x < 0) continue;
                 if (y < 0) continue;
-                if (x >= boardColumns) continue;
-                if (y >= boardRows) continue;
+                if (x >= TempColu) continue;
+                if (y >= TempRow) continue;
                // if (tile[x, y].BombsNear != 0) continue;
-                if (tile[x, y].BomboN) continue;
-                if (tile[x, y].InQueue) continue;
-                QueueBombs.Enqueue(tile[x, y]);
-                tile[x, y].InQueueNum(true);
+                if (tempT[x, y].BomboN) continue;
+                if (tempT[x, y].InQueue) continue;
+                QueueBombs.Enqueue(tempT[x, y]);
+                tempT[x, y].InQueueNum(true);
 
 
             }
         }
-        AddBoolQueue();
+        AddBoolQueue( TempRow,  TempColu);
     }
-    public void AddBoolQueue()
+    public void AddBoolQueue(int TempRow, int TempColu)
     {
+       Tile[,] tempT = WitchTile();
         while (QueueBombs.Count > 0)
         {
-
+            Debug.Log(QueueBombs.Count);
             Tile temp = QueueBombs.Dequeue();
-            AddQueue(temp.X, temp.Y);
+            if (tempT[temp.X, temp.Y].BombsNear != 0) continue;
+             ChecksurroundindQueue(temp.X, temp.Y, TempRow, TempColu);
+           
         }
+    }
+
+    public void SetNumberOfBombs(int num)
+    {
+        BombNum = num;
+    }
+    public int GetNumberBombs()
+    {
+       return BombNum;
     }
 
     /// <summary>

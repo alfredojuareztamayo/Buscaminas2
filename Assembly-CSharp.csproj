@@ -64,6 +64,7 @@
     <Compile Include="Assets\Scrips2\Board.cs" />
     <Compile Include="Assets\Scrips2\GenerateTiles.cs" />
     <Compile Include="Assets\Scrips2\BoardWithTiles.cs" />
+    <Compile Include="Assets\Scrips2\MenuManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />

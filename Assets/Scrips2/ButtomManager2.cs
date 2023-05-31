@@ -15,6 +15,7 @@ public class ButtomManager2 : MonoBehaviour
     private bool Visible;
     void Start()
     {
+        
         main = GameObject.Find("Manager");
         GM = main.GetComponent<GameManager2>();
         m_Content = "";
@@ -24,16 +25,21 @@ public class ButtomManager2 : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (GM.FinallyQueue(x, y))
+        //if (GM.FinallyQueue(x, y))
+        //{
+        //   // m_Text.text = GM.SetStringBoard(x, y);
+        //   // Visible = false;
+        //}
+        Visible = GM.FinallyQueue(x, y);
+        if (Visible)
         {
             m_Text.text = GM.SetStringBoard(x, y);
-           // Visible = false;
         }
     }
     public void SetCoords(int index)
     {
-        x = index / 10;
-        y = index % 10;
+       this.x = index / 10;
+       this.y = index % 10;
     }
     public void ShowCoords()
     {
@@ -41,9 +47,11 @@ public class ButtomManager2 : MonoBehaviour
     }
     public void SetStringTile()
     {
-
-       m_Text.text = GM.SetStringBoard(x, y);
-        GM.QueueFinal(x, y);
+        Debug.Log("x: " + x + "y: " + y);
+        m_Text.text = GM.SetStringBoard(x, y);
+        GM.QueueFinal(x,y);
+       
+        
          
     }
 }
